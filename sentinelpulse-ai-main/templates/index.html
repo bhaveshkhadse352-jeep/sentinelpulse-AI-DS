@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090f1c">
+  <title>SentinelPulse AI — Security Operations Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/main.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="SentinelPulse home">
+      <span class="brand-mark"><i data-lucide="shield-check"></i></span>
+      <span><b>SentinelPulse</b><small>AI SECURITY OPERATIONS</small></span>
+    </a>
+    <div class="side-label">WORKSPACE</div>
+    <nav class="nav-list" aria-label="Main navigation">
+      <button class="nav-item active" data-page="Overview"><i data-lucide="layout-dashboard"></i><span>Overview</span></button>
+      <button class="nav-item" data-page="Threat Intelligence"><i data-lucide="radar"></i><span>Threat Intelligence</span><em class="nav-count" id="nav-threat-count">3</em></button>
+      <button class="nav-item" data-page="Security Analytics"><i data-lucide="chart-no-axes-combined"></i><span>Security Analytics</span></button>
+      <button class="nav-item" data-page="Attack Simulator"><i data-lucide="crosshair"></i><span>Attack Simulator</span></button>
+      <button class="nav-item" data-page="SOC Copilot"><i data-lucide="bot"></i><span>SOC Copilot</span></button>
+      <button class="nav-item" data-page="Incident Reports"><i data-lucide="file-bar-chart"></i><span>Incident Reports</span></button>
+    </nav>
+    <div class="side-bottom">
+      <div class="side-label">PREFERENCES</div>
+      <button class="nav-item" data-page="Settings"><i data-lucide="settings-2"></i><span>Settings</span></button>
+      <div class="sidebar-status"><span class="pulse-dot"></span><div><b>All systems operational</b><small>Demo environment</small></div></div>
+      <div class="sidebar-user"><div class="avatar">SP</div><div><b>Security Analyst</b><small>Local workspace</small></div><i data-lucide="chevrons-up-down"></i></div>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <button class="icon-btn mobile-menu" id="menuToggle" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+      <div class="crumb"><span>Workspace</span><i data-lucide="chevron-right"></i><b id="page-title">Overview</b></div>
+      <div class="top-actions">
+        <label class="global-search"><i data-lucide="search"></i><input id="globalSearch" type="search" placeholder="Search threats, IPs..." aria-label="Search threats"><kbd>⌘ K</kbd></label>
+        <span class="system-pill"><span class="pulse-dot"></span> Systems nominal</span>
+        <span class="top-date" id="currentDate"></span>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle light and dark theme"><i data-lucide="sun-moon"></i></button>
+        <button class="icon-btn notification-btn" id="notificationBtn" aria-label="Notifications"><i data-lucide="bell"></i><span></span></button>
+        <div class="top-avatar">SA</div>
+      </div>
+    </header>
+
+    <div class="content-wrap">
+      <section class="page-heading">
+        <div><div class="eyebrow"><span class="eyebrow-line"></span> SECURITY OPERATIONS CENTER <span class="demo-tag">DEMO ENVIRONMENT</span></div>
+          <h1 id="welcome-title">Security overview<span class="title-period">.</span></h1>
+          <p>Monitor activity, investigate threats, and coordinate your response.</p></div>
+        <div class="heading-actions"><span class="updated-label"><span class="pulse-dot"></span> <span id="lastUpdated">Updating...</span></span><button class="btn btn-secondary" id="refreshBtn"><i data-lucide="refresh-cw"></i> Refresh</button><button class="btn btn-primary" id="exportBtn"><i data-lucide="download"></i> Export report</button></div>
+      </section>
+
+      <section class="kpi-grid" aria-label="Security key performance indicators">
+        <article class="kpi-card accent-cyan"><div class="kpi-top"><span>Total logs analyzed</span><span class="kpi-icon"><i data-lucide="database"></i></span></div><div class="kpi-value" id="kpi-total-logs">—</div><div class="kpi-foot"><span class="foot-dot cyan"></span> All recorded events</div></article>
+        <article class="kpi-card accent-red"><div class="kpi-top"><span>Active critical alerts</span><span class="kpi-icon"><i data-lucide="siren"></i></span></div><div class="kpi-value" id="kpi-active-critical">—</div><div class="kpi-foot"><span class="foot-dot red"></span> Requires analyst attention</div></article>
+        <article class="kpi-card accent-green"><div class="kpi-top"><span>Mitigated threats</span><span class="kpi-icon"><i data-lucide="shield-check"></i></span></div><div class="kpi-value" id="kpi-mitigated">—</div><div class="kpi-foot"><span class="foot-dot green"></span> Incident records resolved</div></article>
+        <article class="kpi-card accent-violet"><div class="kpi-top"><span>Security health score</span><span class="kpi-icon"><i data-lucide="activity"></i></span></div><div class="kpi-value" id="kpi-health-score">—<small>%</small></div><div class="health-track"><span id="healthBar"></span></div><div class="kpi-foot">Weighted demo risk indicator</div></article>
+      </section>
+
+      <section class="analytics-grid">
+        <article class="panel chart-panel"><div class="panel-heading"><div><div class="panel-title">Traffic vs threat spikes</div><div class="panel-subtitle">Activity trend · rolling 12 intervals</div></div><span class="demo-tag">SIMULATED TRAFFIC · DEMO DATA</span></div><div class="chart-wrap"><canvas id="lineChart" aria-label="Traffic versus threat spikes line chart"></canvas></div><div class="chart-foot"><span><i class="legend-dot traffic"></i> Simulated traffic volume</span><span><i class="legend-dot threat"></i> Active threat events</span></div></article>
+        <article class="panel chart-panel distribution-panel"><div class="panel-heading"><div><div class="panel-title">Attack type distribution</div><div class="panel-subtitle">Active incidents by category</div></div><span class="subtle-chip">LIVE RECORDS</span></div><div class="donut-wrap"><canvas id="doughnutChart" aria-label="Attack type distribution doughnut chart"></canvas><div class="donut-center"><b id="donutTotal">0</b><span>ACTIVE</span></div></div><div id="chartLegend" class="chart-legend"></div></article>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel threat-panel" id="threat-section"><div class="panel-heading threat-heading"><div><div class="panel-title">Threat intelligence feed</div><div class="panel-subtitle">Investigate and manage detected incident records</div></div><span class="live-label"><span class="pulse-dot"></span> LIVE FEED</span></div>
+          <div class="table-toolbar"><label class="table-search"><i data-lucide="search"></i><input id="searchBox" type="search" placeholder="Search IP, attack type or MITRE ID..." aria-label="Search threat records"></label><select id="severityFilter" aria-label="Filter by severity"><option value="All">All severities</option><option value="Critical">Critical</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select><span class="record-count" id="recordCount">0 records</span></div>
+          <div class="table-scroll"><table><thead><tr><th>Timestamp</th><th>Source IP</th><th>Attack type</th><th>MITRE ATT&amp;CK</th><th>Severity</th><th>Status</th><th>Action</th></tr></thead><tbody id="threatTableBody"><tr><td colspan="7" class="loading-cell">Loading threat intelligence...</td></tr></tbody></table></div>
+          <div class="table-footer"><span>Incident status reflects the local demo record only.</span><span id="tableSummary">Awaiting data</span></div>
+        </article>
+
+        <aside class="right-rail">
+          <article class="panel simulator-panel" id="simulator-section"><div class="panel-heading"><div><div class="panel-title">Attack simulator</div><div class="panel-subtitle">Generate sample incident records</div></div><span class="sim-icon"><i data-lucide="crosshair"></i></span></div><div class="sim-warning"><i data-lucide="info"></i><span>Simulation only. No real attacks or network traffic are generated.</span></div><div class="sim-options">
+            <button class="sim-btn sim-critical" data-type="Brute Force"><span class="sim-type-icon"><i data-lucide="key-round"></i></span><span><b>Brute Force</b><small>Credential attack</small></span><i data-lucide="plus"></i></button>
+            <button class="sim-btn sim-high" data-type="SQL Injection"><span class="sim-type-icon"><i data-lucide="database-zap"></i></span><span><b>SQL Injection</b><small>Application exploit</small></span><i data-lucide="plus"></i></button>
+            <button class="sim-btn sim-medium" data-type="DDoS"><span class="sim-type-icon"><i data-lucide="network"></i></span><span><b>DDoS</b><small>Service disruption</small></span><i data-lucide="plus"></i></button>
+          </div></article>
+
+          <article class="panel copilot-panel" id="copilot-section"><div class="panel-heading"><div class="copilot-title"><span class="bot-avatar"><i data-lucide="bot"></i></span><div><div class="panel-title">SOC Copilot</div><div class="panel-subtitle">Rule-based security assistant</div></div></div><span class="online-tag">ONLINE</span></div><div class="copilot-note">Ask about your current incident records. Responses are generated by predefined backend rules.</div>
+            <div class="quick-prompts"><button class="quick-btn" data-q="critical">Summarize critical alerts</button><button class="quick-btn" data-q="dangerous_ip">Identify riskiest IP</button><button class="quick-btn" data-q="suggestion">Suggest next steps</button></div>
+            <div class="chat-log" id="chatLog" aria-live="polite"><div class="chat-message assistant"><span class="chat-avatar"><i data-lucide="bot"></i></span><div class="bubble-wrap"><span class="sender">SENTINEL ASSISTANT <time>NOW</time></span><div class="chat-bubble">Hello, analyst. I can summarize the current threat records and provide basic response suggestions. What would you like to review?</div></div></div></div>
+            <form class="chat-compose" id="chatForm"><input type="text" id="chatInput" placeholder="Ask about your security data..." aria-label="Message SOC Copilot" autocomplete="off"><button type="submit" id="sendChat" aria-label="Send message"><i data-lucide="arrow-up"></i></button></form>
+          </article>
+        </aside>
+      </section>
+
+      <section class="placeholder-panel panel" id="placeholderPanel" hidden><div class="placeholder-icon"><i data-lucide="construction"></i></div><div class="eyebrow">WORKSPACE MODULE</div><h2 id="placeholderTitle">Module</h2><p>This module is part of the product navigation concept. Its backend workflow is not implemented in this demo build.</p><button class="btn btn-secondary" id="backOverview"><i data-lucide="arrow-left"></i> Back to overview</button></section>
+      <footer class="app-footer"><span>© 2026 SentinelPulse AI <span class="footer-sep">·</span> Lightweight SOC dashboard</span><span><span class="pulse-dot"></span> Local demo instance <span class="footer-sep">·</span> Flask API</span></footer>
+    </div>
+  </main>
+</div>
+<div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+<div class="modal-backdrop" id="confirmModal" hidden><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><span class="confirm-icon"><i data-lucide="shield-alert"></i></span><h2 id="confirmTitle">Mark incident as mitigated?</h2><p>This updates the incident record status in this demo. It does not block traffic or remediate a host.</p><div class="dialog-actions"><button class="btn btn-secondary" id="cancelMitigate">Cancel</button><button class="btn btn-primary" id="confirmMitigate">Confirm mitigation</button></div></div></div>
+<script>document.addEventListener('DOMContentLoaded',()=>{if(window.lucide)lucide.createIcons();});</script>
+</body></html>
